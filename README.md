@@ -2,11 +2,30 @@
   <img src="assets/banner.png" alt="ClearTx Banner" width="800">
 </p>
 
-# ClearTx 🏦
+<h1 align="center">ClearTx 🏦</h1>
+<h3 align="center">A privacy-first multi-bank transaction labeling tool</h3>
 
-A privacy-first multi-bank transaction labeling tool
+<p align="center">
+  <a href="https://kalel-commits.github.io/cleartx/">Live Demo</a> • 
+  <a href="#-features">Features</a> • 
+  <a href="#-tech-stack">Tech Stack</a> • 
+  <a href="#-installation--usage">Installation</a>
+</p>
 
-Helps you track and label UPI transactions when you have multiple bank accounts linked to one phone number — with zero server storage, 100% local privacy.
+
+## 🌟 Why ClearTx?
+
+Ever received a UPI notification like _"₹450 debited. Ref ID: ABC123"_ and wondered:
+- **Which bank account was charged?** (SBI? HDFC? ICICI?)
+- **What was this payment for?** (Groceries? Rent?)
+- **How much have I spent this month per account?**
+
+ClearTx solves these frustrations while protecting your privacy:
+
+✅ **100% local storage** - Data never leaves your device  
+✅ **No ads, tracking, or accounts**  
+✅ **Simple labeling and filtering**  
+✅ **Exportable CSV for reporting**
 
 ## 🚀 Features
 
@@ -43,32 +62,49 @@ npm run dev
 ## 🌐 Deployment to GitHub Pages
 
 ```bash
-# Update vite.config.ts base path
-# Example: base: '/cleartx/'
+# Update vite.config.ts base path to '/cleartx/' (already set)
 
 # Build and deploy
 npm run deploy
+
+# If you run into ENAMETOOLONG on Windows, try:
+npx gh-pages -d dist -b gh-pages -a
+
 ```
+# Contribution Guide
 
-## 📊 Data Models
+## How to Help
+1. Fork the repo
+2. Create a branch: `feat/your-feature`
+3. Test changes: `npm test`
+4. Push: `git push origin feat/your-feature`
 
-```js
-// Account
-{
-  id: string,
-  nickname: string,
-  maskedNumber: string
-}
+## Code Standards
+- TypeScript strict mode
+- Tailwind utility classes
+- Atomic commits:
+  - feat: New functionality
+  - fix: Bug repairs
+  - docs: Documentation
+---
+name: 🐛 Bug Report
+about: Report unexpected behavior
+title: '[BUG] '
+labels: bug
+---
 
-// Transaction
-{
-  id: string,
-  amount: number,
-  date: string,
-  note?: string,
-  accountId: string
-}
-```
+## Description
+Clear steps to reproduce:
+
+1. Go to '...'
+2. Click '....'
+3. See error
+
+## Expected Behavior
+What should happen?
+
+## Screenshots
+If applicable
 
 ## 📜 License
 
