@@ -1,4 +1,4 @@
-import { FormEvent, useMemo, useState } from 'react'
+import { FormEvent, useEffect, useMemo, useState } from 'react'
 import { getAccounts, saveAccounts, generateId } from '../storage'
 import type { Account } from '../types'
 
@@ -8,6 +8,9 @@ export default function AccountsPage() {
   const [maskedNumber, setMaskedNumber] = useState('')
   const [editingId, setEditingId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
+  const [highlightId, setHighlightId] = useState<string | null>(null)
+  const [removingId, setRemovingId] = useState<string | null>(null)
 
   const isValidMasked = useMemo(() => /^\*{4}\d{4}$/.test(maskedNumber), [maskedNumber])
 
@@ -31,7 +34,8 @@ export default function AccountsPage() {
     if (editingId) {
       const updated = accounts.map((a) => (a.id === editingId ? { ...a, nickname: nickname.trim(), maskedNumber } : a))
       setAccounts(updated)
-      saveAccounts(updated)
+      setSuccess('Account updated')
+      setTimeout(() => setSuccess(null), 1800)
       resetForm()
       return
     }
@@ -43,7 +47,10 @@ export default function AccountsPage() {
     }
     const next = [newAccount, ...accounts]
     setAccounts(next)
-    saveAccounts(next)
+    setHighlightId(newAccount.id)
+    setTimeout(() => setHighlightId(null), 1200)
+    setSuccess('Account added')
+    setTimeout(() => setSuccess(null), 1800)
     resetForm()
   }
 
@@ -54,11 +61,22 @@ export default function AccountsPage() {
   }
 
   function handleDelete(id: string) {
-    const next = accounts.filter((a) => a.id !== id)
-    setAccounts(next)
-    saveAccounts(next)
-    if (editingId === id) resetForm()
+    setRemovingId(id)
+    // Allow CSS transition to play before removing from state
+    setTimeout(() => {
+      const next = accounts.filter((a) => a.id !== id)
+      setAccounts(next)
+      setRemovingId(null)
+      setSuccess('Account deleted')
+      setTimeout(() => setSuccess(null), 1800)
+      if (editingId === id) resetForm()
+    }, 200)
   }
+
+  // Persist accounts to LocalStorage whenever they change
+  useEffect(() => {
+    saveAccounts(accounts)
+  }, [accounts])
 
   return (
     <div className="space-y-6">
@@ -87,7 +105,8 @@ export default function AccountsPage() {
           <div className="flex items-end gap-2">
             <button
               type="submit"
-              className="inline-flex h-10 items-center justify-center rounded-md bg-blue-600 px-4 text-sm font-medium text-white hover:bg-blue-700"
+              disabled={!nickname.trim() || !isValidMasked}
+              className="inline-flex h-10 items-center justify-center rounded-md bg-blue-600 px-4 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {editingId ? 'Save Changes' : 'Add Account'}
             </button>
@@ -102,6 +121,7 @@ export default function AccountsPage() {
             )}
           </div>
           {error && <div className="sm:col-span-2 lg:col-span-3 text-sm text-red-600">{error}</div>}
+          {success && <div className="sm:col-span-2 lg:col-span-3 text-sm text-green-600">{success}</div>}
         </form>
       </div>
 
@@ -119,11 +139,30 @@ export default function AccountsPage() {
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               {accounts.length === 0 && (
                 <tr>
-                  <td className="px-4 py-3 text-sm text-gray-500" colSpan={3}>No accounts yet. Add one above.</td>
+                  <td className="px-4 py-3 text-sm text-gray-500" colSpan={3}>
+                    <span className="inline-flex items-center gap-2">
+                      <svg className="h-4 w-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 4h.01M5.07 19h13.86A2 2 0 0 0 21 17.07V6.93A2 2 0 0 0 18.93 5.07L13.41 3.2a2 2 0 0 0-2.82 0L5.07 5.07A2 2 0 0 0 3 6.93v10.14A2 2 0 0 0 5.07 19z" />
+                      </svg>
+                      No accounts yet. Add one above.
+                    </span>
+                  </td>
                 </tr>
               )}
               {accounts.map((a) => (
-                <tr key={a.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/30">
+                <tr
+                  key={a.id}
+                  className={
+                    [
+                      'transition-all duration-200',
+                      'hover:bg-gray-50 dark:hover:bg-gray-700/30',
+                      highlightId === a.id && 'bg-green-50 dark:bg-green-900/20',
+                      removingId === a.id && 'opacity-0 -translate-y-1',
+                    ]
+                      .filter(Boolean)
+                      .join(' ')
+                  }
+                >
                   <td className="px-4 py-2 text-sm">{a.nickname}</td>
                   <td className="px-4 py-2 text-sm font-mono">{a.maskedNumber}</td>
                   <td className="px-4 py-2 text-sm">
