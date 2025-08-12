@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ClearTx (MVP)
 
 A privacy-first multi-bank transaction labeling tool.
@@ -25,3 +26,6 @@ A privacy-first multi-bank transaction labeling tool.
 
 - Account: `{ id, nickname, maskedNumber }`
 - Transaction: `{ id, amount, date, note?, accountId }`
+=======
+# cleartx
+>>>>>>> f6d2eb3aa4d1442b76445bdcfcc95a78e28a9e50
