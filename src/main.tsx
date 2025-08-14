@@ -6,6 +6,7 @@ import App from './App'
 import AccountsPage from './pages/AccountsPage'
 import TransactionsPage from './pages/TransactionsPage'
 import DashboardPage from './pages/DashboardPage'
+import FeaturesPage from './pages/FeaturesPage'
 
 const router = createBrowserRouter([
   {
@@ -14,7 +15,8 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <DashboardPage /> },
       { path: 'accounts', element: <AccountsPage /> },
-      { path: 'transactions', element: <TransactionsPage /> },
+        { path: 'transactions', element: <TransactionsPage /> },
+        { path: 'features', element: <FeaturesPage /> },
       { path: 'dashboard', element: <DashboardPage /> },
     ],
   },
