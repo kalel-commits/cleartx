@@ -9,7 +9,7 @@ import type { Account, Transaction } from '../types'
 
 export default function TransactionsPage() {
   const [accounts, setAccounts] = useState<Account[]>([])
-  const [transactions, setTransactions] = useState<Transaction[]>([])
+  const [transactions, setTransactions] = useState<Transaction[]>(() => getTransactions())
 
   // Form state
   const [amount, setAmount] = useState('')
@@ -34,7 +34,6 @@ export default function TransactionsPage() {
     const accts = getAccounts()
     setAccounts(accts)
     if (!accountId && accts[0]) setAccountId(accts[0].id)
-    setTransactions(getTransactions())
   }, [])
 
   const isValidAmount = useMemo(() => {

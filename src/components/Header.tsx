@@ -74,6 +74,17 @@ export default function Header() {
             >
               Dashboard
             </NavLink>
+            <NavLink
+              to="/plugins"
+              className={({ isActive }) =>
+                classNames(
+                  'text-sm font-medium hover:text-blue-600 dark:hover:text-blue-400',
+                  isActive && 'text-blue-600 dark:text-blue-400',
+                )
+              }
+            >
+              Plugins
+            </NavLink>
           </nav>
 
           <div className="flex items-center gap-2">
@@ -106,6 +117,7 @@ export default function Header() {
               <NavLink to="/accounts" className="px-2 py-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setOpen(false)}>Accounts</NavLink>
               <NavLink to="/transactions" className="px-2 py-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setOpen(false)}>Transactions</NavLink>
               <NavLink to="/dashboard" className="px-2 py-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setOpen(false)}>Dashboard</NavLink>
+              <NavLink to="/plugins" className="px-2 py-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setOpen(false)}>Plugins</NavLink>
             </nav>
           </div>
         )}

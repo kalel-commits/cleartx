@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { getAccounts, getTransactions } from '../storage'
 import type { Account, Transaction } from '../types'
+import config from '../config'
 
 function formatCurrency(amount: number): string {
   return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 }).format(amount)
@@ -23,6 +24,9 @@ export default function DashboardPage() {
   const [startDate, setStartDate] = useState<string>('')
   const [endDate, setEndDate] = useState<string>('')
   const [search, setSearch] = useState<string>('')
+  // Removed AI and Transit UI/state
+	const [pluginStatus, setPluginStatus] = useState<any | null>(null)
+	const [showPluginStatus, setShowPluginStatus] = useState(false)
 
   useEffect(() => {
     setAccounts(getAccounts())
@@ -49,6 +53,8 @@ export default function DashboardPage() {
     })
   }, [transactions, accountFilter, startDate, endDate, search])
 
+  // Removed AI and Transit effects
+
   function exportCsv() {
     const header = ['Amount', 'Date', 'UPI Ref/Note', 'Account']
     const rows = filtered.map((t) => [
@@ -70,7 +76,10 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-4">
+		<div className="space-y-4">
+
+      {/* AI Insights and Transit cards removed */}
+
       <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
         <h2 className="mb-3 text-lg font-semibold">Filters</h2>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-5">
@@ -116,15 +125,50 @@ export default function DashboardPage() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <div className="lg:col-span-5">
+          <div className="lg:col-span-5 flex gap-3">
             <button
               className="inline-flex h-10 items-center justify-center rounded-md bg-emerald-600 px-4 text-sm font-medium text-white hover:bg-emerald-700"
               onClick={exportCsv}
             >
               Export CSV
             </button>
+            
+				{/* Show Plugin Status - single button */}
+				<button
+					className="inline-flex h-10 items-center justify-center rounded-md bg-blue-600 px-4 text-sm font-medium text-white hover:bg-blue-700"
+					onClick={() => {
+						if (showPluginStatus) {
+							setShowPluginStatus(false)
+							return
+						}
+						const mgr: any = (window as any).pluginManager
+						if (mgr && typeof mgr.getSystemStatus === 'function') {
+							const status = mgr.getSystemStatus()
+							console.log('Plugin system status:', status)
+							setPluginStatus(status)
+							setShowPluginStatus(true)
+						} else {
+							const status: any = {}
+							if ((window as any).torPlugin?.getStatus) status.tor = (window as any).torPlugin.getStatus()
+							if ((window as any).susiPlugin?.getStatus) status.fossasia = (window as any).susiPlugin.getStatus()
+							if ((window as any).transitPlugin?.getStatus) status.transit = (window as any).transitPlugin.getStatus()
+							console.log('Plugin status:', status)
+							setPluginStatus(status)
+							setShowPluginStatus(true)
+						}
+					}}
+				>
+					{showPluginStatus ? 'Hide Plugin Status' : 'Show Plugin Status'}
+				</button>
           </div>
         </div>
+
+		{pluginStatus && showPluginStatus && (
+			<div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+				<h2 className="mb-2 text-lg font-semibold">Plugin Status</h2>
+				<pre className="whitespace-pre-wrap text-sm">{JSON.stringify(pluginStatus, null, 2)}</pre>
+			</div>
+		)}
       </div>
 
       <div className="rounded-lg border border-gray-200 bg-white p-0 shadow-sm dark:border-gray-700 dark:bg-gray-800">
@@ -159,5 +203,6 @@ export default function DashboardPage() {
     </div>
   )
 }
+
 
 
