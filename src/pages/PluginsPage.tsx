@@ -92,7 +92,7 @@ export default function PluginsPage() {
 						<div key={p.name} className="rounded-md border border-gray-200 p-3 text-sm dark:border-gray-700">
 							<div className="mb-1 flex items-center justify-between">
 								<div className="font-medium capitalize">{p.name}</div>
-								<span className={"inline-flex h-2 w-2 rounded-full " + (p.status?.status?.enabled ? 'bg-green-500' : 'bg-gray-400')} />
+								<span className={`inline-flex h-2 w-2 rounded-full ${p.status?.status?.enabled ? 'bg-green-500' : 'bg-gray-400'}`} />
 							</div>
 							<pre className="whitespace-pre-wrap text-xs">{JSON.stringify(p.status?.status ?? p.status, null, 2)}</pre>
 							{p.caps && (
