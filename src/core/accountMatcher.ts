@@ -17,6 +17,10 @@ export function detectSourceAccountFromText(text: string): { bank: string; last4
   if (!text) return null;
   for (const [bank, rx] of Object.entries(BANK_PATTERNS)) {
     const m = text.match(rx);
+    // The regexes in BANK_PATTERNS have two capture groups:
+    //   m[1]: bank name match (e.g., "sbi", "hdfc", etc.)
+    //   m[2]: last 4 digits of account/card/UPI number
+    // We prioritize m[2] (last4) for identification, but fall back to m[1] if m[2] is missing.
     if (m) return { bank, last4: (m[2] || m[1] || '').slice(-4) || null };
   }
   const g = text.match(GENERIC_LAST4);
