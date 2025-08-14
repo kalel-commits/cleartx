@@ -133,7 +133,7 @@ export default function DashboardPage() {
               Export CSV
             </button>
             
-				{/* Show Plugin Status - single button */}
+				{/* Show Plugin Status */}
 				<button
 					className="inline-flex h-10 items-center justify-center rounded-md bg-blue-600 px-4 text-sm font-medium text-white hover:bg-blue-700"
 					onClick={() => {
@@ -144,15 +144,6 @@ export default function DashboardPage() {
 						const mgr: any = (window as any).pluginManager
 						if (mgr && typeof mgr.getSystemStatus === 'function') {
 							const status = mgr.getSystemStatus()
-							console.log('Plugin system status:', status)
-							setPluginStatus(status)
-							setShowPluginStatus(true)
-						} else {
-							const status: any = {}
-							if ((window as any).torPlugin?.getStatus) status.tor = (window as any).torPlugin.getStatus()
-							if ((window as any).susiPlugin?.getStatus) status.fossasia = (window as any).susiPlugin.getStatus()
-							if ((window as any).transitPlugin?.getStatus) status.transit = (window as any).transitPlugin.getStatus()
-							console.log('Plugin status:', status)
 							setPluginStatus(status)
 							setShowPluginStatus(true)
 						}

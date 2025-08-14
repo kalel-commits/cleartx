@@ -129,24 +129,28 @@ git push origin feature/your-feature
 
 ## 🚧 Roadmap
 
-### **Phase 1: Core Features** (Current)
+We have a comprehensive roadmap extending through April 2026! Check out our **[Community Roadmap](ROADMAP.md)** for detailed plans and contribution opportunities.
+
+### **Current Focus (Aug - Oct 2025)**
 - [x] UPI auto-detection
 - [x] Local storage
 - [x] Basic categorization
-- [ ] Receipt OCR
-- [ ] Export functionality
+- [ ] Enhanced bank patterns *(good-first-issue)*
+- [ ] Mobile UI optimization *(good-first-issue)*
 
-### **Phase 2: AI & Privacy** (Q1 2025)
-- [ ] AI receipt scanning
-- [ ] Tor integration
-- [ ] Encrypted backups
-- [ ] Spending predictions
+### **Next Phase (Nov 2025 - Jan 2026)**
+- [ ] AI receipt scanning *(enhancement)*
+- [ ] Smart hashtag system *(feature)*
+- [ ] Predictive insights *(enhancement)*
+- [ ] Privacy controls *(enhancement)*
 
-### **Phase 3: Real-Time Sync** (Q2 2025)
-- [ ] Chrome extension
-- [ ] UPI notification capture
-- [ ] Multi-device sync
-- [ ] Advanced analytics
+### **Advanced Features (Feb - Apr 2026)**
+- [ ] Chrome extension *(advanced)*
+- [ ] Real-time sync *(advanced)*
+- [ ] Business dashboard *(advanced)*
+- [ ] Mobile app *(advanced)*
+
+**Want to contribute?** Pick an issue from our [roadmap](ROADMAP.md) or browse [open issues](https://github.com/yourname/cleartx/issues)!
 
 ---
 
