@@ -6,7 +6,7 @@ import App from './App'
 import AccountsPage from './pages/AccountsPage'
 import TransactionsPage from './pages/TransactionsPage'
 import DashboardPage from './pages/DashboardPage'
-import PluginsPage from './pages/PluginsPage'
+import FeaturesPage from './pages/FeaturesPage'
 
 const router = createBrowserRouter([
   {
@@ -16,7 +16,7 @@ const router = createBrowserRouter([
       { index: true, element: <DashboardPage /> },
       { path: 'accounts', element: <AccountsPage /> },
         { path: 'transactions', element: <TransactionsPage /> },
-        { path: 'plugins', element: <PluginsPage /> },
+        { path: 'features', element: <FeaturesPage /> },
       { path: 'dashboard', element: <DashboardPage /> },
     ],
   },
