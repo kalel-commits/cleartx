@@ -3,6 +3,7 @@ import {
   getAccounts,
   getTransactions,
   saveTransactions,
+  saveAccounts,
   generateId,
 } from '../storage'
 import type { Account, Transaction } from '../types'
@@ -36,7 +37,8 @@ export default function TransactionsPage() {
   useEffect(() => {
     const accts = getAccounts()
     setAccounts(accts)
-    if (!accountId && accts[0]) setAccountId(accts[0].id)
+    // Remove automatic default assignment - user must explicitly choose account
+    // if (!accountId && accts[0]) setAccountId(accts[0].id)
   }, [])
 
   const isValidAmount = useMemo(() => {
@@ -45,14 +47,15 @@ export default function TransactionsPage() {
   }, [amount])
 
   const canSubmit = useMemo(() => {
-    return accounts.length > 0 && isValidAmount && !!date
-  }, [accounts.length, isValidAmount, date])
+    // Allow submission even without existing accounts - we'll create placeholder accounts
+    return isValidAmount && !!date
+  }, [isValidAmount, date])
 
   function resetForm() {
     setAmount('')
     setDate(new Date().toISOString().slice(0, 16))
     setNote('')
-    setAccountId(accounts[0]?.id || '')
+    setAccountId('') // Don't default to first account, let auto-detection work
     setEditingId(null)
     setError(null)
   }
@@ -68,9 +71,9 @@ export default function TransactionsPage() {
 
     // Ensure we have an accountId via auto-detection before saving
     let resolvedAccountId = accountId
-    // Require a UPI handle present in the note for integrity
+    // Require a UPI handle present in the note for integrity when no account is pre-selected
     const upi = detectUpiHandle(note)
-    if (!upi) {
+    if (!resolvedAccountId && !upi) {
       setError('UPI ID not found in reference. Please include a UPI handle like name@okhdfc or mob@ybl in the note.')
       return
     }
@@ -80,13 +83,27 @@ export default function TransactionsPage() {
         const acct = accounts.find((a) => a.maskedNumber.endsWith(hit.last4!))
         if (acct) resolvedAccountId = acct.id
       }
-      if (!resolvedAccountId && bankFromUpi) {
+    if (!resolvedAccountId && bankFromUpi) {
         const matches = accounts.filter((a) => a.nickname.toLowerCase().includes(bankFromUpi!.toLowerCase()))
         if (matches.length === 1) resolvedAccountId = matches[0].id
+        
+        // If no matching account found for the detected bank, create a placeholder
+        if (matches.length === 0) {
+          const placeholderAccount = {
+            id: generateId('acct'),
+            nickname: `Unlinked - ${bankFromUpi}`,
+            maskedNumber: '****0000'
+          }
+          const updatedAccounts = [...accounts, placeholderAccount]
+          setAccounts(updatedAccounts)
+          saveAccounts(updatedAccounts) // Persist the new placeholder account
+          resolvedAccountId = placeholderAccount.id
+          setError(`Created placeholder account for ${bankFromUpi}. Please update account details in the Accounts page.`)
+        }
       }
     }
     if (!resolvedAccountId) {
-      setError('Could not auto-detect account from UPI reference. Please include bank hints or last 4 digits (e.g., ****1234).')
+      setError('Could not auto-detect account from UPI reference. Please include bank hints or last 4 digits (e.g., ****1234), or visit Accounts page to add your bank account first.')
       return
     }
 
@@ -128,7 +145,7 @@ export default function TransactionsPage() {
 
   // Auto-detect account from note (UPI ref/SMS-like text) and show tag chips
   useEffect(() => {
-    if (!note || accounts.length === 0) {
+    if (!note) {
       setAutoDetected(null)
       setBankFromUpi(null)
       return
