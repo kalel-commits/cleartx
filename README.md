@@ -80,7 +80,7 @@ gh issue list --label "good-first-issue"
 
 ### 2. **Set Up Development**
 ```bash
-git clone https://github.com/kale-commits/cleartx.git
+git clone https://github.com/kalel-commits/cleartx.git
 cd cleartx
 npm install
 npm run dev
